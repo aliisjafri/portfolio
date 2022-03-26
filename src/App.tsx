@@ -7,7 +7,7 @@ const App = () => {
     <div className="App">
       <header className="App-header">
         <img src={logo} className="App-logo" alt="logo" />
-        <p>Hello there, my name is Ali!</p>
+        <p>Hello there, my name is Ali and my wife is Saanie!</p>
       </header>
     </div>
   );
