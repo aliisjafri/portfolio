@@ -10,17 +10,29 @@ const About = () => (
         Hello there, my name is Ali and I like to build things!
       </p>
       <div className="mt-4 flex justify-center">
-        <a href="https://www.linkedin.com/in/aliisjafri/">
-          <i className="fa-brands fa-linkedin mr-4 text-3xl hover:text-amber-400"></i>
+        <a
+          aria-label="Go to Ali Jafri's LinkedIn profile"
+          href="https://www.linkedin.com/in/aliisjafri/"
+        >
+          <i className="fa-brands fa-linkedin mr-4 text-4xl hover:text-amber-400"></i>
         </a>
-        <a href="https://twitter.com/AliJafri315">
-          <i className="fa-brands fa-twitter mr-4 text-3xl hover:text-amber-400"></i>
+        <a
+          aria-label="Go to Ali Jafri's Twitter profile"
+          href="https://twitter.com/AliJafri315"
+        >
+          <i className="fa-brands fa-twitter mr-4 text-4xl hover:text-amber-400"></i>
         </a>
-        <a href="https://github.com/aliisjafri">
-          <i className="fa-brands fa-github mr-4 text-3xl hover:text-amber-400"></i>
+        <a
+          aria-label="Go to Ali Jafri's GitHub profile"
+          href="https://github.com/aliisjafri"
+        >
+          <i className="fa-brands fa-github mr-4 text-4xl hover:text-amber-400"></i>
         </a>
-        <a href="mailto:jafrimoali@gmail.com">
-          <i className="fa-solid fa-paper-plane text-3xl hover:text-amber-400"></i>
+        <a
+          aria-label="Send Ali Jafri an email message"
+          href="mailto:jafrimoali@gmail.com"
+        >
+          <i className="fa-solid fa-paper-plane text-4xl hover:text-amber-400"></i>
         </a>
       </div>
     </div>
