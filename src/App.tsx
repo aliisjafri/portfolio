@@ -7,7 +7,7 @@ import About from './About'
 const App = () => {
   const page = useLocation().pathname
   return (
-    <div className="h-screen bg-blue-200/50 p-8 text-slate-500 antialiased dark:bg-slate-900 dark:text-slate-400">
+    <div className="h-screen bg-white p-8 text-slate-500 antialiased dark:bg-slate-900 dark:text-slate-400">
       <div className="App">
         <div className="flex items-center justify-between border-b border-slate-500 pb-4 dark:text-slate-400">
           <img
@@ -21,7 +21,7 @@ const App = () => {
             <Link
               to="/"
               className={`${
-                page === '/' ? 'text-indigo-500 dark:text-amber-400' : ''
+                page === '/' ? 'text-indigo-700 dark:text-amber-400' : ''
               } m-4 font-bold`}
             >
               About
@@ -30,7 +30,7 @@ const App = () => {
               to="/projects"
               className={`${
                 page === '/projects'
-                  ? 'text-indigo-500 dark:text-amber-400'
+                  ? 'text-indigo-700 dark:text-amber-400'
                   : ''
               } m-4 font-bold`}
             >
@@ -40,7 +40,7 @@ const App = () => {
               to="/articles"
               className={`${
                 page === '/articles'
-                  ? 'text-indigo-500 dark:text-amber-400'
+                  ? 'text-indigo-700 dark:text-amber-400'
                   : ''
               } m-4 font-bold`}
             >
