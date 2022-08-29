@@ -1,11 +1,14 @@
 const About = () => (
   <div>
     <div className="mt-4 flex-col items-center justify-center">
-      <img
-        src="alijafri.webp"
-        alt="Ali Jafri headhot"
-        className="mx-auto mt-6 h-32 w-32 rounded-full text-center"
-      />
+      <picture>
+        <source srcSet="alijafri.jpeg" media="(min-width: 500px)" />
+        <img
+          src="alijafri.webp"
+          alt="Ali Jafri headhot"
+          className="mx-auto mt-6 h-32 w-32 rounded-full text-center"
+        />
+      </picture>
       <p className="m-2 mt-6 text-center text-3xl font-bold text-indigo-700 dark:text-amber-400">
         Hello there, my name is Ali and I like to build things!
       </p>
