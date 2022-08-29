@@ -2,7 +2,7 @@ const About = () => (
   <div>
     <div className="mt-4 flex-col items-center justify-center">
       <img
-        src="alijafri.webp"
+        src="alijafri.jpeg"
         alt="Ali Jafri headhot"
         className="mx-auto mt-6 h-32 w-32 rounded-full text-center"
       />
