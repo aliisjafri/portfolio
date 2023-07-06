@@ -1,14 +1,14 @@
-const fs = require('fs')
-const path = require('path')
-
-const prettierOptions = JSON.parse(
-  fs.readFileSync(path.resolve(__dirname, '.prettierrc'), 'utf8'),
-)
-
 module.exports = {
-  extends: ['react-app', 'prettier'],
-  plugins: ['prettier'],
+  parser: '@typescript-eslint/parser',
+  plugins: ['@typescript-eslint', 'prettier'],
+  extends: [
+    'eslint:recommended',
+    'plugin:@typescript-eslint/eslint-recommended',
+    'plugin:@typescript-eslint/recommended',
+    'prettier',
+  ],
   rules: {
-    'prettier/prettier': ['error', prettierOptions],
+    'no-console': 1,
+    'prettier/prettier': 2,
   },
 }
