@@ -7,14 +7,14 @@ import About from './About'
 const App = () => {
   const page = useLocation().pathname
   return (
-    <div className="h-screen bg-gradient-to-tr from-violet-800 to-blue-400 p-8 text-slate-600 antialiased dark:from-violet-800 dark:to-slate-900 dark:text-slate-400">
+    <div className="h-screen bg-gradient-to-tr from-violet-800 to-blue-400 p-4 text-slate-600 antialiased dark:from-violet-800 dark:to-slate-900 dark:text-slate-400">
       <div className="App">
         <div className="flex items-center justify-between border-b border-slate-600 pb-4 dark:text-slate-400">
           <img
             src={logo}
             className="logo-image"
-            height="80px"
-            width="80px"
+            height="60px"
+            width="60px"
             alt="Logo"
           />
           <div>

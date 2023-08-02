@@ -1,36 +1,11 @@
-const CopyButton = ({
-  url,
-  buttonText = 'Link',
-}: {
-  url: string
-  buttonText?: string
-}) => {
-  const handleCopyClick = async () => {
-    try {
-      await navigator.clipboard.writeText(url)
-    } catch (err) {
-      // eslint-disable-next-line no-console
-      console.error('Failed to copy text: ', err)
-      throw err
-    }
-  }
-
-  return (
-    <button
-      className="absolute top-full left-1/2 mt-2 -translate-x-1/2 transform rounded bg-black px-3 py-1 text-xs text-sm text-white opacity-0 transition-opacity duration-200 group-hover:opacity-100"
-      onClick={handleCopyClick}
-    >
-      Copy {buttonText}
-    </button>
-  )
-}
+import CopyButton from './CopyButton'
 
 const About = () => (
-  <div className="mt-4 flex-col items-center justify-center">
+  <div className="mt-8 flex-col items-center justify-center">
     <img
       src="alijafri.jpeg"
-      alt="Ali Jafri headhot"
-      className="mx-auto mt-6 h-32 w-32 rounded-full text-center"
+      alt="Ali Jafri headshot"
+      className="mx-auto mt-6 h-32 w-32 transform rounded-full text-center transition-transform duration-200 hover:scale-110"
     />
     <p className="m-2 mt-6 text-center text-3xl font-bold text-slate-800 dark:text-amber-400">
       Hello there, my name is Ali and I like to build things!
