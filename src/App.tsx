@@ -9,12 +9,12 @@ const App = () => {
   return (
     <div className="h-screen bg-gradient-to-tr from-violet-800 to-blue-400 p-4 text-slate-600 antialiased dark:from-violet-800 dark:to-slate-900 dark:text-slate-400">
       <div className="App">
-        <div className="flex items-center justify-between border-b border-slate-600 pb-4 dark:text-slate-400">
+        <div className="flex items-center justify-between pb-4 dark:text-slate-400">
           <img
             src={logo}
             className="logo-image"
-            height="60px"
-            width="60px"
+            height="40px"
+            width="40px"
             alt="Logo"
           />
           <div>
@@ -22,7 +22,7 @@ const App = () => {
               to="/"
               className={`${
                 page === '/' ? 'text-slate-800 dark:text-amber-400' : ''
-              } m-4 font-bold`}
+              } m-4 font-extrabold `}
             >
               About
             </Link>
@@ -30,7 +30,7 @@ const App = () => {
               to="/projects"
               className={`${
                 page === '/projects' ? 'text-slate-800 dark:text-amber-400' : ''
-              } m-4 font-bold`}
+              } m-4 font-extrabold `}
             >
               Projects
             </Link>
@@ -38,7 +38,7 @@ const App = () => {
               to="/articles"
               className={`${
                 page === '/articles' ? 'text-slate-800 dark:text-amber-400' : ''
-              } m-4 font-bold`}
+              } m-4 font-extrabold `}
             >
               Articles
             </Link>

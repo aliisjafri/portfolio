@@ -7,7 +7,7 @@ const About = () => (
       alt="Ali Jafri headshot"
       className="mx-auto mt-6 h-32 w-32 transform rounded-full text-center transition-transform duration-200 hover:scale-110"
     />
-    <p className="m-2 mt-6 text-center text-3xl font-bold text-slate-800 dark:text-amber-400">
+    <p className="m-2 mt-6 text-center text-4xl font-extrabold tracking-tight text-slate-800 dark:text-amber-400 sm:text-5xl lg:text-6xl">
       Hello there, my name is Ali and I like to build things!
     </p>
     <div className="mt-6 flex justify-center gap-x-4">
@@ -56,7 +56,7 @@ const About = () => (
           href="mailto:jafrimoali@gmail.com"
           className="inline-block transform transition-transform duration-200 hover:scale-110"
         >
-          <i className="fa-solid fa-paper-plane text-4xl  hover:text-slate-800 dark:hover:text-amber-400"></i>
+          <i className="fa-solid fa-paper-plane text-4xl hover:text-slate-800 dark:hover:text-amber-400"></i>
         </a>
         <CopyButton url="jafrimoali@gmail.com" buttonText="Email Address" />
       </div>
