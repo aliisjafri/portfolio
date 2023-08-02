@@ -1,14 +1,16 @@
 import React from 'react'
-import ReactDOM from 'react-dom'
+import { createRoot } from 'react-dom/client'
+const container = document.getElementById('root')
+// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+const root = createRoot(container!)
 import { BrowserRouter } from 'react-router-dom'
 import './index.css'
 import App from './App'
 
-ReactDOM.render(
+root.render(
   <React.StrictMode>
     <BrowserRouter>
       <App />
     </BrowserRouter>
   </React.StrictMode>,
-  document.getElementById('root'),
 )
