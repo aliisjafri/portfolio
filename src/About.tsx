@@ -35,7 +35,7 @@ const About = () => (
     <p className="m-2 mt-6 text-center text-3xl font-bold text-indigo-700 dark:text-amber-400">
       Hello there, my name is Ali and I like to build things!
     </p>
-    <div className="mt-6 flex justify-center gap-x-3">
+    <div className="mt-6 flex justify-center gap-x-4">
       <div className="group relative flex flex-col items-center">
         <a
           aria-label="Go to Ali Jafri's LinkedIn profile"
