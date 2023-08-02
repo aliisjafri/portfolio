@@ -32,7 +32,7 @@ const About = () => (
       alt="Ali Jafri headhot"
       className="mx-auto mt-6 h-32 w-32 rounded-full text-center"
     />
-    <p className="m-2 mt-6 text-center text-3xl font-bold text-indigo-700 dark:text-amber-400">
+    <p className="m-2 mt-6 text-center text-3xl font-bold text-slate-800 dark:text-amber-400">
       Hello there, my name is Ali and I like to build things!
     </p>
     <div className="mt-6 flex justify-center gap-x-4">
@@ -42,7 +42,7 @@ const About = () => (
           href="https://www.linkedin.com/in/aliisjafri/"
           className="inline-block transform transition-transform duration-200 hover:scale-110"
         >
-          <i className="fa-brands fa-linkedin text-4xl hover:text-indigo-700 dark:hover:text-amber-400"></i>
+          <i className="fa-brands fa-linkedin text-4xl hover:text-slate-800 dark:hover:text-amber-400"></i>
         </a>
         <CopyButton
           url="https://www.linkedin.com/in/aliisjafri/"
@@ -55,7 +55,7 @@ const About = () => (
           href="https://twitter.com/AliJafri315"
           className="inline-block transform transition-transform duration-200 hover:scale-110"
         >
-          <i className="fa-brands fa-twitter text-4xl hover:text-indigo-700 dark:hover:text-amber-400"></i>
+          <i className="fa-brands fa-twitter text-4xl hover:text-slate-800 dark:hover:text-amber-400"></i>
         </a>
         <CopyButton
           url="https://twitter.com/AliJafri315"
@@ -68,7 +68,7 @@ const About = () => (
           href="https://github.com/aliisjafri"
           className="inline-block transform transition-transform duration-200 hover:scale-110"
         >
-          <i className="fa-brands fa-github text-4xl hover:text-indigo-700 dark:hover:text-amber-400"></i>
+          <i className="fa-brands fa-github text-4xl hover:text-slate-800 dark:hover:text-amber-400"></i>
         </a>
         <CopyButton
           url="https://github.com/aliisjafri"
@@ -81,7 +81,7 @@ const About = () => (
           href="mailto:jafrimoali@gmail.com"
           className="inline-block transform transition-transform duration-200 hover:scale-110"
         >
-          <i className="fa-solid fa-paper-plane text-4xl  hover:text-indigo-700 dark:hover:text-amber-400"></i>
+          <i className="fa-solid fa-paper-plane text-4xl  hover:text-slate-800 dark:hover:text-amber-400"></i>
         </a>
         <CopyButton url="jafrimoali@gmail.com" buttonText="Email Address" />
       </div>

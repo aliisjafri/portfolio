@@ -7,9 +7,9 @@ import About from './About'
 const App = () => {
   const page = useLocation().pathname
   return (
-    <div className="h-screen bg-white p-8 text-slate-500 antialiased dark:bg-slate-900 dark:text-slate-400">
+    <div className="h-screen bg-gradient-to-tr from-violet-800 to-blue-400 p-8 text-slate-600 antialiased dark:from-violet-800 dark:to-slate-900 dark:text-slate-400">
       <div className="App">
-        <div className="flex items-center justify-between border-b border-slate-500 pb-4 dark:text-slate-400">
+        <div className="flex items-center justify-between border-b border-slate-600 pb-4 dark:text-slate-400">
           <img
             src={logo}
             className="logo-image"
@@ -21,7 +21,7 @@ const App = () => {
             <Link
               to="/"
               className={`${
-                page === '/' ? 'text-indigo-700 dark:text-amber-400' : ''
+                page === '/' ? 'text-slate-800 dark:text-amber-400' : ''
               } m-4 font-bold`}
             >
               About
@@ -29,9 +29,7 @@ const App = () => {
             <Link
               to="/projects"
               className={`${
-                page === '/projects'
-                  ? 'text-indigo-700 dark:text-amber-400'
-                  : ''
+                page === '/projects' ? 'text-slate-800 dark:text-amber-400' : ''
               } m-4 font-bold`}
             >
               Projects
@@ -39,9 +37,7 @@ const App = () => {
             <Link
               to="/articles"
               className={`${
-                page === '/articles'
-                  ? 'text-indigo-700 dark:text-amber-400'
-                  : ''
+                page === '/articles' ? 'text-slate-800 dark:text-amber-400' : ''
               } m-4 font-bold`}
             >
               Articles
