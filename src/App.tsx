@@ -17,7 +17,7 @@ const App = () => {
             width="80px"
             alt="Logo"
           />
-          <div className="">
+          <div>
             <Link
               to="/"
               className={`${
