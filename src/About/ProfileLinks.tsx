@@ -28,24 +28,29 @@ const profileLinks = [
 ]
 
 const ProfileLinks = () => (
-  <div className="mt-6 flex justify-center gap-x-4">
-    {profileLinks.map(({ url, label, buttonText, iconClass }) => (
-      <div className="group relative flex flex-col items-center">
-        <a
-          aria-label={label}
-          href={url}
-          target="_blank"
-          rel="noreferrer"
-          className="inline-block transform transition-transform duration-200 hover:scale-110"
-        >
-          <i
-            className={`${iconClass} text-4xl hover:text-slate-800 dark:hover:text-amber-400 sm:text-5xl lg:text-6xl`}
-          ></i>
-        </a>
-        <CopyButton url={url} buttonText={buttonText} />
-      </div>
-    ))}
-  </div>
+  <section className="mt-6">
+    <p className="text-center text-xl font-extrabold tracking-tight text-slate-800 dark:text-amber-400">
+      Let's connect!
+    </p>
+    <div className="mt-3 flex justify-center gap-x-4">
+      {profileLinks.map(({ url, label, buttonText, iconClass }) => (
+        <div className="group relative flex flex-col items-center">
+          <a
+            aria-label={label}
+            href={url}
+            target="_blank"
+            rel="noreferrer"
+            className="inline-block transform transition-transform duration-200 hover:scale-110"
+          >
+            <i
+              className={`${iconClass} text-4xl hover:text-slate-800 dark:hover:text-amber-400 sm:text-5xl lg:text-6xl`}
+            ></i>
+          </a>
+          <CopyButton url={url} buttonText={buttonText} />
+        </div>
+      ))}
+    </div>
+  </section>
 )
 
 export default ProfileLinks
