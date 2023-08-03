@@ -29,7 +29,7 @@ const profileLinks = [
 
 const ProfileLinks = () => (
   <section className="mt-6">
-    <p className="text-center text-xl font-extrabold tracking-tight text-slate-800 dark:text-amber-400">
+    <p className="text-center text-xl font-extrabold tracking-tight text-yellow-200 dark:text-amber-400">
       Let's connect!
     </p>
     <div className="mt-3 flex justify-center gap-x-4">
@@ -43,7 +43,7 @@ const ProfileLinks = () => (
             className="inline-block transform transition-transform duration-200 hover:scale-110"
           >
             <i
-              className={`${iconClass} text-4xl hover:text-slate-800 dark:hover:text-amber-400 sm:text-5xl lg:text-6xl`}
+              className={`${iconClass} text-4xl hover:text-yellow-200 dark:hover:text-amber-400 sm:text-5xl lg:text-6xl`}
             ></i>
           </a>
           <div className="hidden sm:block">

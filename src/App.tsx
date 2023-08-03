@@ -6,17 +6,17 @@ import About from './About'
 const App = () => {
   const page = useLocation().pathname
   return (
-    <div className="h-screen bg-gradient-to-tr from-violet-800 to-blue-400 p-4 text-slate-600 antialiased dark:from-violet-800 dark:to-slate-900 dark:text-slate-400">
+    <div className="h-screen bg-gradient-to-tr from-violet-800 to-blue-400 p-4 text-slate-700 antialiased dark:from-violet-800 dark:to-slate-900 dark:text-slate-400">
       <div className="App">
         <div className="flex items-center justify-between pb-4 dark:text-slate-400">
-          <p className="text-center font-extrabold tracking-tight text-slate-800 dark:text-amber-400">
+          <p className="text-center font-extrabold tracking-tight text-yellow-200 dark:text-amber-400">
             AliJafri.com
           </p>
           <div className="flex gap-x-4">
             <Link
               to="/"
               className={`${
-                page === '/' ? 'text-slate-800 dark:text-amber-400' : ''
+                page === '/' ? 'text-yellow-200 dark:text-amber-400' : ''
               } underline-animation font-extrabold `}
             >
               About
@@ -24,7 +24,9 @@ const App = () => {
             <Link
               to="/projects"
               className={`${
-                page === '/projects' ? 'text-slate-800 dark:text-amber-400' : ''
+                page === '/projects'
+                  ? 'text-yellow-200 dark:text-amber-400'
+                  : ''
               } underline-animation font-extrabold`}
             >
               Projects
@@ -32,7 +34,9 @@ const App = () => {
             <Link
               to="/articles"
               className={`${
-                page === '/articles' ? 'text-slate-800 dark:text-amber-400' : ''
+                page === '/articles'
+                  ? 'text-yellow-200 dark:text-amber-400'
+                  : ''
               } underline-animation font-extrabold`}
             >
               Articles
