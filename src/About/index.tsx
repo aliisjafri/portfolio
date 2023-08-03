@@ -5,7 +5,7 @@ const About = () => (
     <img
       src="alijafri.jpeg"
       alt="Ali Jafri headshot"
-      className="mx-auto mt-6 h-32 w-32 transform rounded-full text-center transition-transform duration-200 hover:scale-110"
+      className="mx-auto mt-6 h-32 w-32 transform rounded-full text-center transition-transform duration-200 hover:scale-110 lg:h-64 lg:w-64"
     />
     <p className="m-2 mt-6 text-center text-4xl font-extrabold tracking-tight text-slate-800 dark:text-amber-400 sm:text-5xl lg:text-6xl">
       Hello there, my name is Ali and I like to build things!
@@ -17,7 +17,7 @@ const About = () => (
           href="https://www.linkedin.com/in/aliisjafri/"
           className="inline-block transform transition-transform duration-200 hover:scale-110"
         >
-          <i className="fa-brands fa-linkedin text-4xl hover:text-slate-800 dark:hover:text-amber-400"></i>
+          <i className="fa-brands fa-linkedin text-4xl hover:text-slate-800 dark:hover:text-amber-400 sm:text-5xl lg:text-6xl"></i>
         </a>
         <CopyButton
           url="https://www.linkedin.com/in/aliisjafri/"
@@ -30,7 +30,7 @@ const About = () => (
           href="https://twitter.com/AliJafri315"
           className="inline-block transform transition-transform duration-200 hover:scale-110"
         >
-          <i className="fa-brands fa-twitter text-4xl hover:text-slate-800 dark:hover:text-amber-400"></i>
+          <i className="fa-brands fa-twitter text-4xl hover:text-slate-800 dark:hover:text-amber-400 sm:text-5xl lg:text-6xl"></i>
         </a>
         <CopyButton
           url="https://twitter.com/AliJafri315"
@@ -43,7 +43,7 @@ const About = () => (
           href="https://github.com/aliisjafri"
           className="inline-block transform transition-transform duration-200 hover:scale-110"
         >
-          <i className="fa-brands fa-github text-4xl hover:text-slate-800 dark:hover:text-amber-400"></i>
+          <i className="fa-brands fa-github text-4xl hover:text-slate-800 dark:hover:text-amber-400 sm:text-5xl lg:text-6xl"></i>
         </a>
         <CopyButton
           url="https://github.com/aliisjafri"
@@ -56,7 +56,7 @@ const About = () => (
           href="mailto:jafrimoali@gmail.com"
           className="inline-block transform transition-transform duration-200 hover:scale-110"
         >
-          <i className="fa-solid fa-paper-plane text-4xl hover:text-slate-800 dark:hover:text-amber-400"></i>
+          <i className="fa-solid fa-paper-plane text-4xl hover:text-slate-800 dark:hover:text-amber-400 sm:text-5xl lg:text-6xl"></i>
         </a>
         <CopyButton url="jafrimoali@gmail.com" buttonText="Email Address" />
       </div>
