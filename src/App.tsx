@@ -12,7 +12,7 @@ const App = () => {
           <p className="text-center font-extrabold tracking-tight text-yellow-200 dark:text-amber-400">
             AliJafri.com
           </p>
-          <div className="flex gap-x-4">
+          <div className="flex gap-x-3">
             <Link
               to="/"
               className={`${
