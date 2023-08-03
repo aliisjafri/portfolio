@@ -15,6 +15,7 @@ const About = () => (
         <a
           aria-label="Go to Ali Jafri's LinkedIn profile"
           href="https://www.linkedin.com/in/aliisjafri/"
+          target="_blank"
           className="inline-block transform transition-transform duration-200 hover:scale-110"
         >
           <i className="fa-brands fa-linkedin text-4xl hover:text-slate-800 dark:hover:text-amber-400 sm:text-5xl lg:text-6xl"></i>
@@ -28,6 +29,7 @@ const About = () => (
         <a
           aria-label="Go to Ali Jafri's Twitter profile"
           href="https://twitter.com/AliJafri315"
+          target="_blank"
           className="inline-block transform transition-transform duration-200 hover:scale-110"
         >
           <i className="fa-brands fa-twitter text-4xl hover:text-slate-800 dark:hover:text-amber-400 sm:text-5xl lg:text-6xl"></i>
@@ -41,6 +43,7 @@ const About = () => (
         <a
           aria-label="Go to Ali Jafri's GitHub profile"
           href="https://github.com/aliisjafri"
+          target="_blank"
           className="inline-block transform transition-transform duration-200 hover:scale-110"
         >
           <i className="fa-brands fa-github text-4xl hover:text-slate-800 dark:hover:text-amber-400 sm:text-5xl lg:text-6xl"></i>
