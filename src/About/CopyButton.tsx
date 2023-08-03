@@ -27,6 +27,7 @@ const CopyButton = ({
         isClicked ? 'scale-75' : 'scale-100'
       } ${copied ? 'font-extrabold' : ''}`}
       onMouseLeave={() => setCopied(false)}
+      aria-label={`Copy ${buttonText}`}
       onClick={handleCopyClick}
     >
       {`${copied ? 'Copied' : 'Copy'} ${buttonText}${copied ? '!' : ''}`}
