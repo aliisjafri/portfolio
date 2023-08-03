@@ -46,7 +46,9 @@ const ProfileLinks = () => (
               className={`${iconClass} text-4xl hover:text-slate-800 dark:hover:text-amber-400 sm:text-5xl lg:text-6xl`}
             ></i>
           </a>
-          <CopyButton url={url} buttonText={buttonText} />
+          <div className="hidden sm:block">
+            <CopyButton url={url} buttonText={buttonText} />
+          </div>
         </div>
       ))}
     </div>

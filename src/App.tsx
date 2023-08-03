@@ -12,12 +12,12 @@ const App = () => {
           <p className="text-center font-extrabold tracking-tight text-slate-800 dark:text-amber-400">
             AliJafri.com
           </p>
-          <div>
+          <div className="flex gap-x-4">
             <Link
               to="/"
               className={`${
                 page === '/' ? 'text-slate-800 dark:text-amber-400' : ''
-              } font-extrabold `}
+              } underline-animation font-extrabold `}
             >
               About
             </Link>
@@ -25,7 +25,7 @@ const App = () => {
               to="/projects"
               className={`${
                 page === '/projects' ? 'text-slate-800 dark:text-amber-400' : ''
-              } font-extrabold `}
+              } underline-animation font-extrabold`}
             >
               Projects
             </Link>
@@ -33,7 +33,7 @@ const App = () => {
               to="/articles"
               className={`${
                 page === '/articles' ? 'text-slate-800 dark:text-amber-400' : ''
-              } font-extrabold `}
+              } underline-animation font-extrabold`}
             >
               Articles
             </Link>
