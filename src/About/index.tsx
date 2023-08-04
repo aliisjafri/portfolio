@@ -34,11 +34,11 @@ const About = () => (
     <div className="mt-6 flex justify-center">
       <p className="max-w-md font-bold tracking-tight text-white md:text-xl lg:text-2xl">
         I am a Senior Frontend Engineer with {yearsOfExperience} years of
-        experience and a passion for building intuitive, user-friendly web
-        applications. With a strong background in JavaScript, HTML, CSS, React,
-        Redux, TypeScript and Tailwind, I have a proven track record of
-        delivering high-quality code and driving impactful projects in the
-        Health and Finance industries.
+        professional experience and a passion for building intuitive,
+        user-friendly web applications. With a strong background in JavaScript,
+        HTML, CSS, React, Redux, TypeScript and Tailwind, I have a proven track
+        record of delivering high-quality code and driving impactful projects in
+        the Health and Finance industries.
       </p>
     </div>
     <ProfileLinks />
