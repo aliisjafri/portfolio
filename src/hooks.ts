@@ -7,6 +7,7 @@ export const useTheme = (): [Theme, () => void] => {
   )
 
   useEffect(() => {
+    console.log({ theme })
     theme === 'dark'
       ? document.documentElement.classList.remove('light')
       : document.documentElement.classList.remove('dark')
