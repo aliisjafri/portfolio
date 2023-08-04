@@ -1,12 +1,20 @@
 import ProfileLinks from './ProfileLinks'
 
-const calculateExperience = (): number => {
+const calculateExperience = (): string => {
   const startDate = new Date(2018, 0, 1)
   const now = new Date()
   const experienceInMilliseconds = now.getTime() - startDate.getTime()
-  const experienceInYears =
-    experienceInMilliseconds / (1000 * 60 * 60 * 24 * 365)
-  return Math.round(experienceInYears * 10) / 10
+  let experienceInYears = experienceInMilliseconds / (1000 * 60 * 60 * 24 * 365)
+  experienceInYears = Math.round(experienceInYears * 10) / 10
+
+  const integerPart = Math.floor(experienceInYears)
+  const decimalPart = experienceInYears - integerPart
+
+  if (decimalPart >= 0.2) {
+    return `${integerPart}+`
+  } else {
+    return `${integerPart}`
+  }
 }
 
 const yearsOfExperience = calculateExperience() || '5+'
