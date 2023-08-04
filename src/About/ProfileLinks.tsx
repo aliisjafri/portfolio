@@ -1,5 +1,4 @@
 import CopyButton from './CopyButton'
-
 const profileLinks = [
   {
     label: "Go to Ali Jafri's LinkedIn profile",
@@ -27,32 +26,34 @@ const profileLinks = [
   },
 ]
 
-const ProfileLinks = () => (
-  <section className="mt-6">
-    <p className="text-center text-xl font-extrabold tracking-tight text-yellow-200 dark:text-amber-400">
-      Let's connect!
-    </p>
-    <div className="mt-3 flex justify-center gap-x-4">
-      {profileLinks.map(({ url, label, buttonText, iconClass }) => (
-        <div key={url} className="group relative flex flex-col items-center">
-          <a
-            aria-label={label}
-            href={url}
-            target="_blank"
-            rel="noreferrer"
-            className="inline-block transform transition-transform duration-200 hover:scale-110"
-          >
-            <i
-              className={`${iconClass} text-4xl hover:text-yellow-200 dark:hover:text-amber-400 sm:text-5xl lg:text-6xl`}
-            ></i>
-          </a>
-          <div className="hidden lg:block">
-            <CopyButton url={url} buttonText={buttonText} />
+const ProfileLinks = () => {
+  const copyButtonEnabled = localStorage.getItem('copyEnabled') || 'false'
+  return (
+    <section className="mt-6">
+      <p className="text-center text-xl font-extrabold tracking-tight text-yellow-200 dark:text-amber-400">
+        Let's connect!
+      </p>
+      <div className="mt-3 flex justify-center gap-x-4">
+        {profileLinks.map(({ url, label, buttonText, iconClass }) => (
+          <div key={url} className="group relative flex flex-col items-center">
+            <a
+              aria-label={label}
+              href={url}
+              target="_blank"
+              rel="noreferrer"
+              className="inline-block transform transition-transform duration-200 hover:scale-110"
+            >
+              <i
+                className={`${iconClass} text-4xl hover:text-yellow-200 dark:hover:text-amber-400 sm:text-5xl lg:text-6xl`}
+              ></i>
+            </a>
+            {copyButtonEnabled === 'true' && (
+              <CopyButton url={url} buttonText={buttonText} />
+            )}
           </div>
-        </div>
-      ))}
-    </div>
-  </section>
-)
-
+        ))}
+      </div>
+    </section>
+  )
+}
 export default ProfileLinks
