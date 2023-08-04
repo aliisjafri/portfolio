@@ -1,6 +1,6 @@
 <!DOCTYPE html>
-<html lang="en">
-  <head class="dark">
+<html lang="en" class="dark">
+  <head>
     <meta charset="utf-8" />
     <link rel="icon" href="favicon.ico" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -8,6 +8,12 @@
     <meta name="description" content="Ali Jafri's Portfolio Website" />
     <link rel="apple-touch-icon" href="apple-touch-icon.png" />
     <link rel="manifest" href="manifest.json" />
+    <script>
+      const storedThemePreference = localStorage.getItem('theme')
+      if (storedThemePreference) {
+        document.documentElement.classList.add(storedThemePreference)
+      }
+    </script>
     <title>Ali Jafri</title>
   </head>
   <body>
