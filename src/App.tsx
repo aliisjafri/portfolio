@@ -6,7 +6,7 @@ import { useTheme } from './hooks'
 
 const App = () => {
   const page = useLocation().pathname
-  const [theme, toggleTheme] = useTheme()
+  const [, toggleTheme] = useTheme()
 
   return (
     <div className="h-screen bg-gradient-to-tr from-violet-800 to-blue-400 p-4 text-slate-700 antialiased dark:from-violet-800 dark:to-slate-900 dark:text-slate-400">
