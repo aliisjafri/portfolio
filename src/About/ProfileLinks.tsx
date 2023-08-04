@@ -34,7 +34,7 @@ const ProfileLinks = () => (
     </p>
     <div className="mt-3 flex justify-center gap-x-4">
       {profileLinks.map(({ url, label, buttonText, iconClass }) => (
-        <div className="group relative flex flex-col items-center">
+        <div key={url} className="group relative flex flex-col items-center">
           <a
             aria-label={label}
             href={url}

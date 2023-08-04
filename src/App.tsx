@@ -2,9 +2,12 @@ import { Routes, Route, Link, useLocation } from 'react-router-dom'
 import Projects from './Projects'
 import Articles from './Articles'
 import About from './About'
+import { useTheme } from './hooks'
 
 const App = () => {
   const page = useLocation().pathname
+  const [theme, toggleTheme] = useTheme()
+
   return (
     <div className="h-screen bg-gradient-to-tr from-violet-800 to-blue-400 p-4 text-slate-700 antialiased dark:from-violet-800 dark:to-slate-900 dark:text-slate-400">
       <div className="App">
@@ -13,6 +16,12 @@ const App = () => {
             AliJafri.com
           </p>
           <div className="flex gap-x-3">
+            <div>
+              <i
+                onClick={() => toggleTheme()}
+                className="fa-solid fa-circle-half-stroke cursor-pointer"
+              ></i>
+            </div>
             <Link
               to="/"
               className={`${
