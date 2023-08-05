@@ -5,7 +5,7 @@
 html,
 body,
 #root {
-  @apply m-0 h-screen;
+  @apply m-0 flex h-screen flex-col;
 }
 
 body {
