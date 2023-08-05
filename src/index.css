@@ -5,7 +5,7 @@
 html,
 body,
 #root {
-  @apply m-0 min-h-screen;
+  @apply m-0 h-screen;
 }
 
 body {
