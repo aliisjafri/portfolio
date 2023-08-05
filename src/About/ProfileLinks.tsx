@@ -29,7 +29,7 @@ const profileLinks = [
 const ProfileLinks = () => {
   const copyButtonEnabled = localStorage.getItem('copyEnabled') || 'false'
   return (
-    <section className="mt-6">
+    <section className="mt-6 mb-14">
       <p className="text-center text-xl font-extrabold tracking-tight text-yellow-200 dark:text-amber-400">
         Let's connect!
       </p>
