@@ -32,7 +32,7 @@ const About = () => (
       </h1>
     </div>
     <div className="mt-6 flex justify-center">
-      <p className="max-w-md font-bold tracking-tight text-white md:text-xl lg:text-2xl">
+      <p className="max-w-xl font-bold tracking-tight text-white md:text-xl lg:text-2xl">
         I am a Senior Frontend Engineer with {yearsOfExperience} years of
         professional experience and a passion for building intuitive,
         user-friendly web applications. With a strong background in JavaScript,
