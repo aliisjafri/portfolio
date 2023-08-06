@@ -19,7 +19,7 @@ const calculateExperience = (): string => {
 
 const yearsOfExperience = calculateExperience() || '5+'
 const About = () => (
-  <div className="mt-8 mb-16 flex-col items-center justify-center text-center">
+  <div className="mt-8 flex-col items-center justify-center text-center">
     <img
       src="alijafriheadshot.jpeg"
       alt="Ali Jafri headshot"
