@@ -25,7 +25,7 @@ const App = () => {
             >
               <i
                 className={`${
-                  theme === 'dark' ? 'fa-regular fa-moon' : 'fa-solid fa-moon'
+                  theme === 'dark' ? 'fa-solid fa-sun' : 'fa-solid fa-moon'
                 } transform cursor-pointer transition-transform duration-200 hover:scale-110 hover:text-yellow-200 dark:hover:text-amber-400`}
               ></i>
             </button>
