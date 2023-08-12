@@ -1,4 +1,5 @@
 import CopyButton from './CopyButton'
+import { motion } from 'framer-motion'
 const profileLinks = [
   {
     label: "Go to Ali Jafri's LinkedIn profile",
@@ -36,17 +37,18 @@ const ProfileLinks = () => {
       <div className="mt-3 flex justify-center gap-x-4">
         {profileLinks.map(({ url, label, buttonText, iconClass }) => (
           <div key={url} className="group relative flex flex-col items-center">
-            <a
+            <motion.a
               aria-label={label}
               href={url}
               target="_blank"
               rel="noreferrer"
-              className="inline-block transform transition-transform duration-200 hover:scale-110"
+              whileHover={{ scale: 1.2 }}
+              transition={{ type: 'spring', stiffness: 400, damping: 10 }}
             >
               <i
                 className={`${iconClass} text-4xl hover:text-yellow-200 dark:hover:text-amber-400 sm:text-5xl 2xl:text-6xl`}
               ></i>
-            </a>
+            </motion.a>
             {copyButtonEnabled === 'true' && (
               <CopyButton url={url} buttonText={buttonText} />
             )}
