@@ -27,7 +27,8 @@ const About = () => (
     />
     <div className="m-2 mt-8 flex justify-center">
       <h1 className="max-w-3xl text-4xl font-extrabold tracking-tight text-yellow-200 dark:text-amber-400 sm:text-5xl 2xl:text-6xl">
-        Hello there, my name is Ali and I like to build things!
+        Hello there! <span className="emoji-wave">👋🏼</span> <br></br> My name is
+        Ali and I like to build things!
       </h1>
     </div>
     <div className="mt-6 flex justify-center">
