@@ -32,18 +32,21 @@ const ThemeToggleButton = () => {
   const [theme, toggleTheme] = useTheme()
 
   return (
-    <motion.div variants={buttonVariants} initial={theme} animate={theme}>
-      <button
-        aria-label={`toggle ${theme === 'dark' ? 'light' : theme} theme`}
-        onClick={() => toggleTheme()}
-      >
-        <i
-          className={`${
-            theme === 'dark' ? 'fa-solid fa-moon' : 'fa-solid fa-sun'
-          } transform cursor-pointer transition-transform duration-200 hover:scale-110 hover:text-yellow-200 dark:hover:text-amber-400`}
-        ></i>
-      </button>
-    </motion.div>
+    <motion.button
+      aria-label={`toggle ${theme === 'dark' ? 'light' : theme} theme`}
+      onClick={() => toggleTheme()}
+      variants={buttonVariants}
+      initial={theme}
+      animate={theme}
+      whileHover={{ scale: 1.2 }}
+      transition={{ type: 'spring', stiffness: 400, damping: 10 }}
+    >
+      <i
+        className={`${
+          theme === 'dark' ? 'fa-solid fa-moon' : 'fa-solid fa-sun'
+        } transform cursor-pointer transition-transform duration-200 hover:text-yellow-200 dark:hover:text-amber-400`}
+      ></i>
+    </motion.button>
   )
 }
 

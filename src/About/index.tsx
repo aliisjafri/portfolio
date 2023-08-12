@@ -1,5 +1,4 @@
 import ProfileLinks from './ProfileLinks'
-import { motion } from 'framer-motion'
 const calculateExperience = (): string => {
   const startDate = new Date(2018, 0, 1)
   const now = new Date()
