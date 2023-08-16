@@ -9,7 +9,7 @@ export const TEXT = {
   GENERAL_APPEARANCE: `GENERAL APPEARANCE - Patient is very pleasant, well-dressed and in good hygiene. Alert and oriented x3. In no acute distress.`,
   DERM: `DERM: Severely incurvated `,
   BORDER: ` border of the `,
-  NAIL: ` nail. Ungual labia is erythematous, edematous and tender.`,
+  NAIL: ` nail. Ungual labia is erythematous, edematous and tender. `,
   EVIDENCE: ` Evidence of previous nail wedge resection. No serous drainage is noted. All other nails are intact without evidence of dystrophy. Interdigital spaces are clean and dry bilaterally. No open wounds or sores bilaterally. There is good skin turgor and texture bilaterally. No hyperkeratotic lesions noted bilaterally. `,
   NEURO: `NEURO: light touch sensation intact bilaterally. Proprioception intact bilaterally. Muscle testing 5/5 anterior, lateral and posterior muscle groups bilaterally.`,
   VASC: `VASC: Pedal pulses are `,
