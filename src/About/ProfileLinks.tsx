@@ -11,7 +11,7 @@ const profileLinks = [
     label: "Go to Ali Jafri's Twitter profile",
     url: 'https://twitter.com/AliJafri315',
     buttonText: 'Twitter Url',
-    iconClass: 'fa-brands fa-twitter',
+    iconClass: 'fa-brands fa-x-twitter',
   },
   {
     label: "Go to Ali Jafri's GitHub profile",
