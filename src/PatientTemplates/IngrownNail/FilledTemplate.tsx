@@ -61,10 +61,10 @@ const FilledTemplate = ({
         transition={{ type: 'spring', stiffness: 400, damping: 10 }}
         className="border rounded-3xl p-4 mt-4 shadow-2xl"
       >
+        <div className="flex justify-end mt-4">
+          <CopyToClipboardButton targetRef={secondTextRef} />
+        </div>
         <div ref={secondTextRef}>
-          <div className="flex justify-end mt-4">
-            <CopyToClipboardButton targetRef={secondTextRef} />
-          </div>
           <h1 className="text-2xl font-extrabold pb-2">{TEXT.PHYSICAL_EXAM}</h1>
           <p>{TEXT.GENERAL_APPEARANCE}</p>
           <p>

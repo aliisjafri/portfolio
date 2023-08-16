@@ -66,7 +66,6 @@ const FilledTemplate = ({
           </p>
         </div>
       </motion.div>
-      <br />
       <motion.div
         whileHover={{ scale: 1.01 }}
         transition={{ type: 'spring', stiffness: 400, damping: 10 }}
