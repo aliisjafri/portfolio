@@ -37,11 +37,14 @@ const FilledTemplate = ({
   const secondTextRef = useRef<HTMLDivElement>(null)
 
   return (
-    <div className="border rounded-3xl p-4 mt-4">
-      <div className="flex justify-end">
+    <div>
+      <div className="flex justify-end mt-4">
         <CopyToClipboardButton targetRef={firstTextRef} />
       </div>
-      <div ref={firstTextRef}>
+      <div
+        ref={firstTextRef}
+        className="border rounded-3xl p-4 mt-4 shadow-2xl"
+      >
         <h1 className="text-2xl font-extrabold pb-2">{TEXT.SUBJECTIVE}</h1>
         <p>
           <span className="font-extrabold">{TEXT.CHIEF}</span>
@@ -60,10 +63,13 @@ const FilledTemplate = ({
         </p>
       </div>
       <br />
-      <div className="flex justify-end">
+      <div className="flex justify-end mt-4">
         <CopyToClipboardButton targetRef={secondTextRef} />
       </div>
-      <div ref={secondTextRef}>
+      <div
+        ref={secondTextRef}
+        className="border rounded-3xl p-4 mt-4 shadow-2xl"
+      >
         <h1 className="text-2xl font-extrabold pb-2">{TEXT.PHYSICAL_EXAM}</h1>
         <p>{TEXT.GENERAL_APPEARANCE}</p>
         <p>{TEXT.LE_EXAM}</p>
