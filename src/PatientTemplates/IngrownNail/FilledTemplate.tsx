@@ -105,6 +105,8 @@ const FilledTemplate = ({
           {TEXT.PT_PROCEDURE}
           {partialTotal}
           {TEXT.PT_INSTRUCTION}
+          {withOrWithout}
+          {TEXT.EXPLAINED}
         </p>
         <p>{TEXT.SEE_PROCEDURE_NOTE}</p>
         <p>{TEXT.POST_CARE}</p>

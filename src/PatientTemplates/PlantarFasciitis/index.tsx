@@ -206,7 +206,6 @@ const PlantarFasciitis = () => {
               placeholder="bilateral ?"
               onChange={updateState}
             />
-            {TEXT.TOE}
           </p>
           <p>
             {TEXT.PES}
@@ -214,22 +213,17 @@ const PlantarFasciitis = () => {
           </p>
           <p>
             {TEXT.PAIN}
-            <InputField
-              value={fields.side}
-              name="side"
-              placeholder="L / R"
-              onChange={updateState}
-            />
+            {`[ ${fields.painSideLR} ]`}
             {TEXT.FOOT}
           </p>
           <p>
             {TEXT.ENTHESOPATHY}
-            {` [ ${fields.bilateralDiagnosis} ] `}
+            {`[ ${fields.painSideLR} ]`}
             {TEXT.HEEL}
           </p>
           <p>
             {TEXT.PLANTAR_FASCIITIS}
-            {` [ ${fields.bilateralDiagnosis} ] `}
+            {`[ ${fields.painSideLR} ]`}
             {TEXT.HEEL}
           </p>
           <p>{TEXT.CONDITION_ETIOLOGY_TREATMENT}</p>

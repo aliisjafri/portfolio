@@ -174,6 +174,13 @@ const IngrownNail = () => {
               onChange={updateState}
             />
             {TEXT.PT_INSTRUCTION}
+            <InputField
+              value={fields.withOrWithout}
+              name="withOrWithout"
+              placeholder="with / without"
+              onChange={updateState}
+            />
+            {TEXT.EXPLAINED}
           </p>
           <p>{TEXT.SEE_PROCEDURE_NOTE}</p>
           <p>{TEXT.POST_CARE}</p>
@@ -186,12 +193,7 @@ const IngrownNail = () => {
             {TEXT.TOE_FORM}
             {`[ ${fields.partialTotal} ]`}
             {TEXT.NAIL_AVULSION}
-            <InputField
-              value={fields.withOrWithout}
-              name="withOrWithout"
-              placeholder="with / without"
-              onChange={updateState}
-            />
+            {`[ ${fields.withOrWithout} ]`}
             {TEXT.PHENOL}
           </p>
           <div className="flex justify-end">

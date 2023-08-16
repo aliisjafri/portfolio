@@ -16,7 +16,6 @@ const FilledTemplate = ({
   rangeThree,
   rangeFour,
   bilateralDiagnosis,
-  side,
   timeToReturn,
 }: {
   chiefComplaint: string
@@ -32,7 +31,6 @@ const FilledTemplate = ({
   rangeThree: string
   rangeFour: string
   bilateralDiagnosis: string
-  side: string
   timeToReturn: string
 }) => {
   const firstTextRef = useRef<HTMLDivElement>(null)
@@ -121,7 +119,6 @@ const FilledTemplate = ({
         <p>
           {TEXT.GASTROC}
           {bilateralDiagnosis}
-          {TEXT.TOE}
         </p>
         <p>
           {TEXT.PES}
@@ -129,18 +126,17 @@ const FilledTemplate = ({
         </p>
         <p>
           {TEXT.PAIN}
-          {side}
-
+          {painSideLR}
           {TEXT.FOOT}
         </p>
         <p>
           {TEXT.ENTHESOPATHY}
-          {bilateralDiagnosis}
+          {painSideLR}
           {TEXT.HEEL}
         </p>
         <p>
           {TEXT.PLANTAR_FASCIITIS}
-          {bilateralDiagnosis}
+          {painSideLR}
           {TEXT.HEEL}
         </p>
         <br></br>
