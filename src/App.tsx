@@ -2,6 +2,9 @@ import { Routes, Route, Link, useLocation } from 'react-router-dom'
 import Projects from './Projects'
 import Articles from './Articles'
 import About from './About'
+import IngrownNail from './PatientTemplates/IngrownNail'
+import PlantarFasciitis from './PatientTemplates/PlantarFasciitis'
+import PatientTemplates from './PatientTemplates'
 import ThemeToggleButton from './Components/ThemeToggleButton'
 
 const App = () => {
@@ -57,6 +60,10 @@ const App = () => {
             <Route index element={<About />} />
             <Route path="articles" element={<Articles />} />
             <Route path="projects" element={<Projects />} />
+            <Route path="patient-templates" element={<PatientTemplates />}>
+              <Route path="ingrown-nail" element={<IngrownNail />} />
+              <Route path="plantar-fasciitis" element={<PlantarFasciitis />} />
+            </Route>
           </Route>
         </Routes>
       </div>
