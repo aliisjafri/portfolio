@@ -106,6 +106,7 @@ const FilledTemplate = ({
           {rangeThree}
           {TEXT.DEGREE_EXTENDED}
           {rangeFour}
+          {TEXT.DEGREE_FLEXED}
         </p>
         <p>{TEXT.FIVE}</p>
         <p>{TEXT.JAYS}</p>

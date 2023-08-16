@@ -190,6 +190,7 @@ const PlantarFasciitis = () => {
               placeholder="range four"
               onChange={updateState}
             />
+            {TEXT.DEGREE_FLEXED}
           </p>
           <p>{TEXT.FIVE}</p>
           <p>{TEXT.JAYS}</p>
