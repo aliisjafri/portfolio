@@ -25,14 +25,15 @@ const FilledTemplate = ({
   yesOrNo: string
   withOrWithout: string
 }) => {
-  const textRef = useRef<HTMLDivElement>(null)
+  const firstTextRef = useRef<HTMLDivElement>(null)
+  const secondTextRef = useRef<HTMLDivElement>(null)
 
   return (
     <div className="border rounded-3xl p-4 mt-4">
       <div className="flex justify-end">
-        <CopyToClipboardButton targetRef={textRef} />
+        <CopyToClipboardButton targetRef={firstTextRef} />
       </div>
-      <div ref={textRef}>
+      <div ref={firstTextRef}>
         <h1 className="text-2xl font-extrabold pb-2">{TEXT.SUBJECTIVE}</h1>
         <p>
           <span className="font-extrabold">{TEXT.CHIEF}</span>
@@ -48,6 +49,11 @@ const FilledTemplate = ({
           {TEXT.HISTORY_AGO}
         </p>
         <br></br>
+      </div>
+      <div className="flex justify-end">
+        <CopyToClipboardButton targetRef={secondTextRef} />
+      </div>
+      <div ref={secondTextRef}>
         <h1 className="text-2xl font-extrabold pb-2">{TEXT.PHYSICAL_EXAM}</h1>
         <p>{TEXT.GENERAL_APPEARANCE}</p>
         <p>

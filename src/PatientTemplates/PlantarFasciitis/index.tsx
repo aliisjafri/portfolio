@@ -98,6 +98,7 @@ const PlantarFasciitis = () => {
             {TEXT.HISTORY_AGO}
             <InputField
               value={fields.treatmentOptions}
+              width="w-96"
               name="treatmentOptions"
               placeholder="treatment options"
               onChange={updateState}
