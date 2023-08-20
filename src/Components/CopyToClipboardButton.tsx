@@ -17,7 +17,12 @@ const CopyToClipboardButton = ({ targetRef }: CopyToClipboardButtonProps) => {
     })
   }
 
-  return <MotionButton onClick={copyToClipboard}>{buttonText}</MotionButton>
+  return (
+    <MotionButton onClick={copyToClipboard}>
+      {buttonText}
+      <i className="fa-regular fa-copy pl-2"></i>
+    </MotionButton>
+  )
 }
 
 export default CopyToClipboardButton

@@ -1,7 +1,6 @@
 import { useRef } from 'react'
 import { TEXT } from './TemplateConstants'
 import CopyToClipboardButton from '../../Components/CopyToClipboardButton'
-import { motion } from 'framer-motion'
 
 const FilledTemplate = ({
   chiefComplaint,
@@ -39,11 +38,7 @@ const FilledTemplate = ({
 
   return (
     <div>
-      <motion.div
-        whileHover={{ scale: 1.01 }}
-        transition={{ type: 'spring', stiffness: 400, damping: 10 }}
-        className="border rounded-3xl p-4 mt-4 shadow-2xl"
-      >
+      <div className="border rounded-3xl p-4 mt-4 shadow-2xl">
         <div className="flex justify-end mt-4">
           <CopyToClipboardButton targetRef={firstTextRef} />
         </div>
@@ -65,12 +60,8 @@ const FilledTemplate = ({
             {TEXT.DENIES_FALLS}
           </p>
         </div>
-      </motion.div>
-      <motion.div
-        whileHover={{ scale: 1.01 }}
-        transition={{ type: 'spring', stiffness: 400, damping: 10 }}
-        className="border rounded-3xl p-4 mt-4 shadow-2xl"
-      >
+      </div>
+      <div className="border rounded-3xl p-4 mt-4 shadow-2xl">
         <div className="flex justify-end mt-4">
           <CopyToClipboardButton targetRef={secondTextRef} />
         </div>
@@ -177,7 +168,7 @@ const FilledTemplate = ({
           <p>{TEXT.DISCUSSED_SIGNS}</p>
           <p>{TEXT.CALL}</p>
         </div>
-      </motion.div>
+      </div>
     </div>
   )
 }
