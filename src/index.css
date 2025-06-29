@@ -35,6 +35,14 @@
     width: 100%;
   }
 
+  .underline-active::after {
+    content: '';
+    display: block;
+    width: 100%;
+    height: 2px;
+    background: currentColor;
+  }
+
   @keyframes wave {
     0% {
       transform: rotate(0deg);
