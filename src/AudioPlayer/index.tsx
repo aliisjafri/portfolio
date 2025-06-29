@@ -346,12 +346,46 @@ const AudioPlayer = () => {
     if (state.status !== 'idle') return
 
     try {
-      const stream = await navigator.mediaDevices.getUserMedia({ audio: true })
-      const mediaRecorder = new MediaRecorder(stream, {
-        mimeType: MediaRecorder.isTypeSupported('audio/webm;codecs=opus')
-          ? 'audio/webm;codecs=opus'
-          : 'audio/webm',
-      })
+      // Ensure audio context is ready (important for iOS)
+      if (
+        audioContextRef.current &&
+        audioContextRef.current.state === 'suspended'
+      ) {
+        await audioContextRef.current.resume()
+      }
+
+      // Check if MediaRecorder is supported
+      if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+        alert(
+          'Recording is not supported in this browser. Please use a modern browser like Chrome, Firefox, or Safari.',
+        )
+        return
+      }
+
+      // iOS Safari specific constraints
+      const constraints = {
+        audio: {
+          channelCount: 1, // Mono for better iOS compatibility
+          sampleRate: 44100,
+          echoCancellation: true,
+          noiseSuppression: true,
+          autoGainControl: true,
+        },
+      }
+
+      const stream = await navigator.mediaDevices.getUserMedia(constraints)
+
+      // Determine the best MIME type for the device
+      let mimeType = 'audio/webm'
+      if (MediaRecorder.isTypeSupported('audio/webm;codecs=opus')) {
+        mimeType = 'audio/webm;codecs=opus'
+      } else if (MediaRecorder.isTypeSupported('audio/mp4')) {
+        mimeType = 'audio/mp4' // iOS Safari often prefers MP4
+      } else if (MediaRecorder.isTypeSupported('audio/wav')) {
+        mimeType = 'audio/wav'
+      }
+
+      const mediaRecorder = new MediaRecorder(stream, { mimeType })
       mediaRecorderRef.current = mediaRecorder
       audioChunksRef.current = []
 
@@ -432,7 +466,30 @@ const AudioPlayer = () => {
       setState(prev => ({ ...prev, status: 'recording' }))
     } catch (error) {
       console.error('Error accessing microphone:', error)
-      alert('Error accessing microphone. Please check permissions.')
+
+      // Provide iOS-specific error messages
+      let errorMessage = 'Error accessing microphone.'
+
+      if (error instanceof Error) {
+        if (error.name === 'NotAllowedError') {
+          errorMessage =
+            'Microphone access denied. Please:\n\n' +
+            '• Go to Settings > Safari > Camera & Microphone\n' +
+            '• Allow access for this website\n' +
+            '• Refresh the page and try again'
+        } else if (error.name === 'NotFoundError') {
+          errorMessage =
+            'No microphone found. Please check that your device has a microphone.'
+        } else if (error.name === 'NotSupportedError') {
+          errorMessage =
+            'Recording is not supported on this device/browser. Try using Safari on iOS or Chrome on desktop.'
+        } else if (error.name === 'SecurityError') {
+          errorMessage =
+            "Microphone access blocked by security policy. Please ensure you're using HTTPS and try again."
+        }
+      }
+
+      alert(errorMessage)
       setState(prev => ({ ...prev, status: 'idle' }))
     }
   }
