@@ -46,6 +46,9 @@ const AudioPlayer = () => {
   const isPlayingRef = useRef<boolean>(false)
   const [recordingTime, setRecordingTime] = useState(0)
   const recordingTimerRef = useRef<number | null>(null)
+  const [repeatCountInput, setRepeatCountInput] = useState(
+    String(state.repeatCount),
+  )
 
   const MAX_FILE_SIZE_MB = 25 // 25 MB limit
   const MAX_FILE_SIZE_BYTES = MAX_FILE_SIZE_MB * 1024 * 1024
@@ -414,9 +417,28 @@ const AudioPlayer = () => {
     [state.clips, updateClipName],
   )
 
-  const handleRepeatCountChange = useCallback((value: string) => {
-    const count = Math.max(1, parseInt(value) || 1)
-    setState(prev => ({ ...prev, repeatCount: count }))
+  const handleRepeatCountInputChange = useCallback((value: string) => {
+    if (value === '') {
+      setRepeatCountInput('')
+      setState(prev => ({ ...prev, repeatCount: 0 }))
+      return
+    }
+
+    const parsedCount = parseInt(value, 10)
+
+    if (isNaN(parsedCount)) {
+      setRepeatCountInput('')
+      setState(prev => ({ ...prev, repeatCount: 0 }))
+      return
+    }
+
+    const newCount = Math.max(0, Math.min(1000, parsedCount))
+
+    setRepeatCountInput(String(newCount))
+    setState(prev => ({
+      ...prev,
+      repeatCount: newCount,
+    }))
   }, [])
 
   const selectedClip = state.clips.find(
@@ -489,10 +511,10 @@ const AudioPlayer = () => {
           Replay Count:
           <input
             type="number"
-            min="1"
-            max="100"
-            value={state.repeatCount}
-            onChange={e => handleRepeatCountChange(e.target.value)}
+            min="0"
+            max="1000"
+            value={repeatCountInput}
+            onChange={e => handleRepeatCountInputChange(e.target.value)}
             disabled={!canOperate}
             className="border rounded px-3 py-2 w-24
               focus:outline-none focus:ring-2
@@ -503,7 +525,11 @@ const AudioPlayer = () => {
 
         <button
           onClick={state.status === 'playing' ? stopAudio : startPlayback}
-          disabled={!hasSelectedClip || state.status === 'recording'}
+          disabled={
+            !hasSelectedClip ||
+            state.status === 'recording' ||
+            state.repeatCount === 0
+          }
           className="inline-flex items-center px-6 py-3
             bg-blue-600 text-white font-medium rounded
             hover:bg-blue-700 focus:outline-none
