@@ -1,5 +1,97 @@
 import React, { useState, useRef, useEffect, useCallback } from 'react'
 import StatusIndicator from './StatusIndicator'
+import lamejs from '@breezystack/lamejs'
+
+const convertToMp3 = async (audioBuffer: AudioBuffer): Promise<Uint8Array> => {
+  try {
+    const channels = Math.min(audioBuffer.numberOfChannels, 2) // Limit to stereo
+    const sampleRate = audioBuffer.sampleRate
+    const kbps = 128
+
+    // Initialize encoder with error handling
+    let encoder: lamejs.Mp3Encoder
+    try {
+      encoder = new lamejs.Mp3Encoder(channels, sampleRate, kbps)
+    } catch (error) {
+      console.error('Failed to create MP3 encoder:', error)
+      throw new Error('MP3 encoding not supported in this browser')
+    }
+
+    const mp3Data: Uint8Array[] = []
+    const sampleBlockSize = 1152 // Required by lamejs
+
+    if (channels === 1) {
+      // Mono encoding
+      const samples = audioBuffer.getChannelData(0)
+
+      for (let i = 0; i < samples.length; i += sampleBlockSize) {
+        const sampleChunk = samples.subarray(i, i + sampleBlockSize)
+        const int16Buffer = new Int16Array(sampleChunk.length)
+
+        for (let j = 0; j < sampleChunk.length; j++) {
+          int16Buffer[j] = Math.max(
+            -32768,
+            Math.min(32767, sampleChunk[j] * 32767),
+          )
+        }
+
+        const mp3buf = encoder.encodeBuffer(int16Buffer)
+        if (mp3buf.length > 0) {
+          mp3Data.push(mp3buf)
+        }
+      }
+    } else {
+      // Stereo encoding
+      const leftSamples = audioBuffer.getChannelData(0)
+      const rightSamples = audioBuffer.getChannelData(1)
+
+      for (let i = 0; i < leftSamples.length; i += sampleBlockSize) {
+        const leftChunk = leftSamples.subarray(i, i + sampleBlockSize)
+        const rightChunk = rightSamples.subarray(i, i + sampleBlockSize)
+
+        const leftInt16 = new Int16Array(leftChunk.length)
+        const rightInt16 = new Int16Array(rightChunk.length)
+
+        for (let j = 0; j < leftChunk.length; j++) {
+          leftInt16[j] = Math.max(-32768, Math.min(32767, leftChunk[j] * 32767))
+          rightInt16[j] = Math.max(
+            -32768,
+            Math.min(32767, rightChunk[j] * 32767),
+          )
+        }
+
+        const mp3buf = encoder.encodeBuffer(leftInt16, rightInt16)
+        if (mp3buf.length > 0) {
+          mp3Data.push(mp3buf)
+        }
+      }
+    }
+
+    // Flush remaining data
+    const mp3buf = encoder.flush()
+    if (mp3buf.length > 0) {
+      mp3Data.push(mp3buf)
+    }
+
+    // Combine all MP3 data
+    let totalLength = 0
+    mp3Data.forEach(data => {
+      totalLength += data.length
+    })
+
+    const result = new Uint8Array(totalLength)
+    let offset = 0
+    mp3Data.forEach(data => {
+      result.set(data, offset)
+      offset += data.length
+    })
+
+    return result
+  } catch (error) {
+    console.error('MP3 conversion error:', error)
+    throw error
+  }
+}
 
 type AudioClip = {
   id: string
@@ -279,8 +371,15 @@ const AudioPlayer = () => {
           const arrayBuffer = await audioBlob.arrayBuffer()
           const audioBuffer = await audioContext.decodeAudioData(arrayBuffer)
 
+          // Convert to MP3
+          const mp3Buffer = await convertToMp3(audioBuffer)
+
           const clipId = Date.now().toString()
           const fileName = `Recording ${new Date().toLocaleTimeString()}`
+
+          const audioFile = new File([mp3Buffer], `${fileName}.mp3`, {
+            type: 'audio/mpeg',
+          })
 
           const newClip: AudioClip = {
             id: clipId,
@@ -288,14 +387,12 @@ const AudioPlayer = () => {
             originalName: fileName,
             duration: audioBuffer.duration,
             audioBuffer,
-            originalFile: new File([audioBlob], `${fileName}.webm`, {
-              type: mediaRecorder.mimeType,
-            }),
+            originalFile: audioFile,
           }
 
           setState(prev => ({
             ...prev,
-            audioFile: newClip.originalFile,
+            audioFile: audioFile,
             duration: audioBuffer.duration,
             remainingTime: audioBuffer.duration,
             status: 'idle',
