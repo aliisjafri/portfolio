@@ -44,6 +44,12 @@ const AudioPlayer = () => {
   const mediaRecorderRef = useRef<MediaRecorder | null>(null)
   const audioChunksRef = useRef<Blob[]>([])
   const isPlayingRef = useRef<boolean>(false)
+  const [recordingTime, setRecordingTime] = useState(0)
+  const recordingTimerRef = useRef<number | null>(null)
+
+  const MAX_FILE_SIZE_MB = 25 // 25 MB limit
+  const MAX_FILE_SIZE_BYTES = MAX_FILE_SIZE_MB * 1024 * 1024
+  const MAX_RECORDING_DURATION_S = 5 * 60 // 5 minutes
 
   useEffect(() => {
     currentCountRef.current = state.currentCount
@@ -101,6 +107,16 @@ const AudioPlayer = () => {
   ) => {
     const file = event.target.files?.[0]
     if (!file || state.status !== 'idle') return
+
+    if (file.size > MAX_FILE_SIZE_BYTES) {
+      alert(
+        `File is too large (${(file.size / 1024 / 1024).toFixed(
+          1,
+        )} MB). Please upload a file smaller than ${MAX_FILE_SIZE_MB} MB.`,
+      )
+      event.target.value = '' // Clear the input
+      return
+    }
 
     setState(prev => ({ ...prev, isLoading: true }))
 
@@ -292,9 +308,27 @@ const AudioPlayer = () => {
         }
 
         stream.getTracks().forEach(track => track.stop())
+
+        if (recordingTimerRef.current) {
+          clearInterval(recordingTimerRef.current)
+          recordingTimerRef.current = null
+        }
       }
 
       mediaRecorder.start(100)
+      setRecordingTime(MAX_RECORDING_DURATION_S)
+
+      recordingTimerRef.current = window.setInterval(() => {
+        setRecordingTime(prevTime => {
+          const newTime = prevTime - 1
+          if (newTime <= 0) {
+            stopRecording()
+            return 0
+          }
+          return newTime
+        })
+      }, 1000)
+
       setState(prev => ({ ...prev, status: 'recording' }))
     } catch (error) {
       console.error('Error accessing microphone:', error)
@@ -306,6 +340,10 @@ const AudioPlayer = () => {
   const stopRecording = useCallback(() => {
     if (mediaRecorderRef.current && state.status === 'recording') {
       mediaRecorderRef.current.stop()
+      if (recordingTimerRef.current) {
+        clearInterval(recordingTimerRef.current)
+        recordingTimerRef.current = null
+      }
     }
   }, [state.status])
 
@@ -434,7 +472,17 @@ const AudioPlayer = () => {
               state.status === 'recording' ? 'fa-stop' : 'fa-microphone'
             } mr-2`}
           ></i>
-          {state.status === 'recording' ? 'Stop Recording' : 'Record Clip'}
+          {state.status === 'recording' ? (
+            <span>
+              Stop Recording (
+              {`${Math.floor(recordingTime / 60)}:${(recordingTime % 60)
+                .toString()
+                .padStart(2, '0')}`}
+              )
+            </span>
+          ) : (
+            'Record Clip'
+          )}
         </button>
 
         <label className="flex items-center gap-2 text-gray-700">
