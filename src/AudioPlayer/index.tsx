@@ -447,6 +447,24 @@ const AudioPlayer = () => {
   const canOperate = state.status === 'idle' && !state.isLoading
   const hasSelectedClip = selectedClip !== undefined
 
+  const handleDownloadClip = useCallback(
+    (id: string) => {
+      if (state.status !== 'idle') return
+
+      const clipToDownload = state.clips.find(clip => clip.id === id)
+      if (!clipToDownload) return
+
+      const link = document.createElement('a')
+      link.href = URL.createObjectURL(clipToDownload.originalFile)
+      link.download = clipToDownload.name
+      document.body.appendChild(link)
+      link.click()
+      document.body.removeChild(link)
+      URL.revokeObjectURL(link.href)
+    },
+    [state.clips, state.status],
+  )
+
   return (
     <div className="container mx-auto p-8 bg-white rounded-lg shadow-lg max-w-2xl">
       <h1 className="text-3xl font-bold text-gray-800 mb-8 text-center">
@@ -589,6 +607,19 @@ const AudioPlayer = () => {
                     </p>
                   </div>
                   <div className="flex items-center gap-2">
+                    <button
+                      onClick={e => {
+                        e.stopPropagation()
+                        handleDownloadClip(clip.id)
+                      }}
+                      disabled={!canOperate}
+                      className="text-blue-600 hover:text-blue-700 p-2 rounded
+                        hover:bg-blue-50 disabled:opacity-50 disabled:cursor-not-allowed
+                        transition-colors"
+                      aria-label="Download clip"
+                    >
+                      <i className="fas fa-download text-lg"></i>
+                    </button>
                     <button
                       onClick={e => {
                         e.stopPropagation()
