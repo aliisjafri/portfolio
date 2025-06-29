@@ -131,6 +131,7 @@ const AudioPlayer = () => {
   const durationRef = useRef<number>(0)
   const audioContextRef = useRef<AudioContext | null>(null)
   const sourceRef = useRef<AudioBufferSourceNode | null>(null)
+  const htmlAudioRef = useRef<HTMLAudioElement | null>(null)
   const startTimeRef = useRef<number>(0)
   const timerRef = useRef<number | null>(null)
   const mediaRecorderRef = useRef<MediaRecorder | null>(null)
@@ -138,6 +139,7 @@ const AudioPlayer = () => {
   const isPlayingRef = useRef<boolean>(false)
   const [recordingTime, setRecordingTime] = useState(0)
   const recordingTimerRef = useRef<number | null>(null)
+  const [isMobile, setIsMobile] = useState(false)
   const [repeatCountInput, setRepeatCountInput] = useState(
     String(state.repeatCount),
   )
@@ -158,16 +160,44 @@ const AudioPlayer = () => {
     isPlayingRef.current = state.status === 'playing'
   }, [state.status])
 
+  // Detect mobile device
+  useEffect(() => {
+    const checkMobile = () => {
+      const userAgent = navigator.userAgent.toLowerCase()
+      const mobileKeywords = [
+        'mobile',
+        'android',
+        'iphone',
+        'ipad',
+        'ipod',
+        'blackberry',
+        'windows phone',
+      ]
+      return (
+        mobileKeywords.some(keyword => userAgent.includes(keyword)) ||
+        'ontouchstart' in window ||
+        window.innerWidth <= 768
+      )
+    }
+    setIsMobile(checkMobile())
+  }, [])
+
+  // Cleanup on unmount
   useEffect(() => {
     return () => {
       cleanupAudio()
       if (audioContextRef.current) {
         audioContextRef.current.close()
       }
+      if (htmlAudioRef.current) {
+        htmlAudioRef.current.pause()
+        htmlAudioRef.current.src = ''
+      }
     }
   }, [])
 
   const cleanupAudio = useCallback(() => {
+    // Clean up Web Audio API
     if (sourceRef.current) {
       try {
         sourceRef.current.stop()
@@ -178,6 +208,16 @@ const AudioPlayer = () => {
       }
       sourceRef.current = null
     }
+
+    // Clean up HTML5 audio
+    if (htmlAudioRef.current) {
+      htmlAudioRef.current.pause()
+      if (htmlAudioRef.current.src) {
+        URL.revokeObjectURL(htmlAudioRef.current.src)
+        htmlAudioRef.current.src = ''
+      }
+    }
+
     if (timerRef.current) {
       clearInterval(timerRef.current)
       timerRef.current = null
@@ -258,49 +298,99 @@ const AudioPlayer = () => {
   }, [state.selectedClipId, state.clips])
 
   const playAudio = useCallback(async (): Promise<void> => {
-    const audioBuffer = getSelectedAudioBuffer()
-    if (!audioBuffer || !isPlayingRef.current) return
+    const selectedClip = state.clips.find(
+      clip => clip.id === state.selectedClipId,
+    )
+    if (!selectedClip || !isPlayingRef.current) return
 
     try {
-      const audioContext = await initializeAudioContext()
-
-      if (sourceRef.current) {
-        sourceRef.current.disconnect()
-      }
-
-      startTimeRef.current = audioContext.currentTime
-      sourceRef.current = audioContext.createBufferSource()
-      sourceRef.current.buffer = audioBuffer
-      sourceRef.current.connect(audioContext.destination)
-
-      sourceRef.current.onended = () => {
-        if (!isPlayingRef.current) return
-
-        const newCount = currentCountRef.current - 1
-        setState(prev => ({ ...prev, currentCount: newCount }))
-
-        if (newCount > 0) {
-          setTimeout(() => playAudio(), 50)
-        } else {
-          stopAudio()
+      if (isMobile) {
+        // Use HTML5 audio for mobile devices
+        if (!htmlAudioRef.current) {
+          htmlAudioRef.current = new Audio()
         }
-      }
 
-      sourceRef.current.start(0)
-      startTimer()
+        const audio = htmlAudioRef.current
+        audio.src = URL.createObjectURL(selectedClip.originalFile)
+
+        audio.onended = () => {
+          if (!isPlayingRef.current) return
+
+          const newCount = currentCountRef.current - 1
+          setState(prev => ({ ...prev, currentCount: newCount }))
+
+          if (newCount > 0) {
+            setTimeout(() => playAudio(), 50)
+          } else {
+            stopAudio()
+          }
+        }
+
+        // Start playing
+        await audio.play()
+        startTimeRef.current = Date.now() / 1000
+        startTimer()
+      } else {
+        // Use Web Audio API for desktop
+        const audioBuffer = getSelectedAudioBuffer()
+        if (!audioBuffer) return
+
+        const audioContext = await initializeAudioContext()
+
+        if (sourceRef.current) {
+          sourceRef.current.disconnect()
+        }
+
+        startTimeRef.current = audioContext.currentTime
+        sourceRef.current = audioContext.createBufferSource()
+        sourceRef.current.buffer = audioBuffer
+        sourceRef.current.connect(audioContext.destination)
+
+        sourceRef.current.onended = () => {
+          if (!isPlayingRef.current) return
+
+          const newCount = currentCountRef.current - 1
+          setState(prev => ({ ...prev, currentCount: newCount }))
+
+          if (newCount > 0) {
+            setTimeout(() => playAudio(), 50)
+          } else {
+            stopAudio()
+          }
+        }
+
+        sourceRef.current.start(0)
+        startTimer()
+      }
     } catch (error) {
       console.error('Error playing audio:', error)
       stopAudio()
     }
-  }, [getSelectedAudioBuffer, initializeAudioContext])
+  }, [
+    getSelectedAudioBuffer,
+    initializeAudioContext,
+    isMobile,
+    state.clips,
+    state.selectedClipId,
+  ])
 
   const startTimer = useCallback(() => {
     if (timerRef.current) clearInterval(timerRef.current)
 
     timerRef.current = window.setInterval(() => {
-      if (!audioContextRef.current || !isPlayingRef.current) return
+      if (!isPlayingRef.current) return
 
-      const elapsed = audioContextRef.current.currentTime - startTimeRef.current
+      let elapsed: number
+      if (isMobile && htmlAudioRef.current) {
+        // For mobile HTML5 audio
+        elapsed = htmlAudioRef.current.currentTime || 0
+      } else if (audioContextRef.current) {
+        // For desktop Web Audio API
+        elapsed = audioContextRef.current.currentTime - startTimeRef.current
+      } else {
+        return
+      }
+
       const remaining = durationRef.current - elapsed
 
       setState(prev => ({
@@ -313,7 +403,7 @@ const AudioPlayer = () => {
         timerRef.current = null
       }
     }, 100)
-  }, [])
+  }, [isMobile])
 
   const startPlayback = useCallback(() => {
     if (
@@ -338,6 +428,14 @@ const AudioPlayer = () => {
       status: 'idle',
       remainingTime: prev.duration,
     }))
+
+    // Stop HTML5 audio if playing on mobile
+    if (htmlAudioRef.current) {
+      htmlAudioRef.current.pause()
+      htmlAudioRef.current.currentTime = 0
+      URL.revokeObjectURL(htmlAudioRef.current.src)
+      htmlAudioRef.current.src = ''
+    }
 
     cleanupAudio()
   }, [cleanupAudio])
