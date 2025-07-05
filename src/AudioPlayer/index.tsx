@@ -143,6 +143,11 @@ const AudioPlayer = () => {
   const [repeatCountInput, setRepeatCountInput] = useState(
     String(state.repeatCount),
   )
+  const [showClipEditor, setShowClipEditor] = useState<string | null>(null)
+  const [clipStartTime, setClipStartTime] = useState('0')
+  const [clipEndTime, setClipEndTime] = useState('0')
+  const [isPreviewPlaying, setIsPreviewPlaying] = useState(false)
+  const previewSourceRef = useRef<AudioBufferSourceNode | null>(null)
 
   const MAX_FILE_SIZE_MB = 25 // 25 MB limit
   const MAX_FILE_SIZE_BYTES = MAX_FILE_SIZE_MB * 1024 * 1024
@@ -717,6 +722,252 @@ const AudioPlayer = () => {
     [state.clips, state.status],
   )
 
+  const handleDownloadLoopedClip = useCallback(
+    async (id: string) => {
+      if (state.status !== 'idle' || state.repeatCount === 0) return
+
+      const clipToDownload = state.clips.find(clip => clip.id === id)
+      if (!clipToDownload) return
+
+      try {
+        setState(prev => ({ ...prev, isLoading: true }))
+
+        // Create looped audio buffer
+        const originalBuffer = clipToDownload.audioBuffer
+        const loopCount = state.repeatCount
+        const newLength = originalBuffer.length * loopCount
+        const numberOfChannels = originalBuffer.numberOfChannels
+        const sampleRate = originalBuffer.sampleRate
+
+        // Create new audio buffer for looped version
+        const audioContext = await initializeAudioContext()
+        const loopedBuffer = audioContext.createBuffer(
+          numberOfChannels,
+          newLength,
+          sampleRate,
+        )
+
+        // Copy original audio data multiple times
+        for (let channel = 0; channel < numberOfChannels; channel++) {
+          const originalChannelData = originalBuffer.getChannelData(channel)
+          const loopedChannelData = loopedBuffer.getChannelData(channel)
+
+          for (let loop = 0; loop < loopCount; loop++) {
+            const offset = loop * originalBuffer.length
+            loopedChannelData.set(originalChannelData, offset)
+          }
+        }
+
+        // Convert looped buffer to MP3
+        const mp3Buffer = await convertToMp3(loopedBuffer)
+
+        const fileName = `${clipToDownload.name} (${loopCount}x Loop)`
+        const loopedFile = new File([mp3Buffer], `${fileName}.mp3`, {
+          type: 'audio/mpeg',
+        })
+
+        // Download the looped file
+        const link = document.createElement('a')
+        link.href = URL.createObjectURL(loopedFile)
+        link.download = fileName
+        document.body.appendChild(link)
+        link.click()
+        document.body.removeChild(link)
+        URL.revokeObjectURL(link.href)
+
+        setState(prev => ({ ...prev, isLoading: false }))
+      } catch (error) {
+        console.error('Error creating looped download:', error)
+        alert('Error creating looped version. Please try again.')
+        setState(prev => ({ ...prev, isLoading: false }))
+      }
+    },
+    [state.clips, state.status, state.repeatCount, initializeAudioContext],
+  )
+
+  const handleOpenClipEditor = useCallback(
+    (id: string) => {
+      const clip = state.clips.find(c => c.id === id)
+      if (!clip) return
+
+      setShowClipEditor(id)
+      setClipStartTime('0')
+      setClipEndTime(clip.duration.toFixed(1))
+    },
+    [state.clips],
+  )
+
+  const handleCreateClip = useCallback(async () => {
+    if (!showClipEditor) return
+
+    const originalClip = state.clips.find(c => c.id === showClipEditor)
+    if (!originalClip) return
+
+    const startTime = parseFloat(clipStartTime)
+    const endTime = parseFloat(clipEndTime)
+
+    // Validation
+    if (isNaN(startTime) || isNaN(endTime)) {
+      alert('Please enter valid start and end times')
+      return
+    }
+
+    if (startTime < 0 || endTime > originalClip.duration) {
+      alert(
+        `Times must be between 0 and ${originalClip.duration.toFixed(
+          1,
+        )} seconds`,
+      )
+      return
+    }
+
+    if (startTime >= endTime) {
+      alert('Start time must be less than end time')
+      return
+    }
+
+    try {
+      setState(prev => ({ ...prev, isLoading: true }))
+
+      // Create clipped audio buffer
+      const originalBuffer = originalClip.audioBuffer
+      const sampleRate = originalBuffer.sampleRate
+      const numberOfChannels = originalBuffer.numberOfChannels
+
+      const startSample = Math.floor(startTime * sampleRate)
+      const endSample = Math.floor(endTime * sampleRate)
+      const newLength = endSample - startSample
+
+      const audioContext = await initializeAudioContext()
+      const clippedBuffer = audioContext.createBuffer(
+        numberOfChannels,
+        newLength,
+        sampleRate,
+      )
+
+      // Copy the selected portion
+      for (let channel = 0; channel < numberOfChannels; channel++) {
+        const originalChannelData = originalBuffer.getChannelData(channel)
+        const clippedChannelData = clippedBuffer.getChannelData(channel)
+
+        for (let i = 0; i < newLength; i++) {
+          clippedChannelData[i] = originalChannelData[startSample + i]
+        }
+      }
+
+      // Convert to MP3
+      const mp3Buffer = await convertToMp3(clippedBuffer)
+
+      const clipId = Date.now().toString()
+      const fileName = `${originalClip.name} (${startTime}s-${endTime}s)`
+
+      const clippedFile = new File([mp3Buffer], `${fileName}.mp3`, {
+        type: 'audio/mpeg',
+      })
+
+      const newClip: AudioClip = {
+        id: clipId,
+        name: fileName,
+        originalName: fileName,
+        duration: clippedBuffer.duration,
+        audioBuffer: clippedBuffer,
+        originalFile: clippedFile,
+      }
+
+      setState(prev => ({
+        ...prev,
+        clips: [...prev.clips, newClip],
+        selectedClipId: clipId,
+        audioFile: clippedFile,
+        duration: clippedBuffer.duration,
+        remainingTime: clippedBuffer.duration,
+        isLoading: false,
+      }))
+
+      // Close the clip editor
+      setShowClipEditor(null)
+    } catch (error) {
+      console.error('Error creating clip:', error)
+      alert('Error creating clip. Please try again.')
+      setState(prev => ({ ...prev, isLoading: false }))
+    }
+  }, [
+    showClipEditor,
+    state.clips,
+    clipStartTime,
+    clipEndTime,
+    initializeAudioContext,
+  ])
+
+  const formatTime = useCallback((seconds: number) => {
+    const mins = Math.floor(seconds / 60)
+    const secs = (seconds % 60).toFixed(1)
+    return `${mins}:${secs.padStart(4, '0')}`
+  }, [])
+
+  const handlePreviewClip = useCallback(async () => {
+    if (!showClipEditor || isPreviewPlaying) return
+
+    const originalClip = state.clips.find(c => c.id === showClipEditor)
+    if (!originalClip) return
+
+    const startTime = parseFloat(clipStartTime)
+    const endTime = parseFloat(clipEndTime)
+
+    // Validation
+    if (isNaN(startTime) || isNaN(endTime) || startTime >= endTime) {
+      alert('Please enter valid start and end times')
+      return
+    }
+
+    try {
+      const audioContext = await initializeAudioContext()
+      const source = audioContext.createBufferSource()
+      source.buffer = originalClip.audioBuffer
+      source.connect(audioContext.destination)
+
+      // Store reference for cleanup
+      previewSourceRef.current = source
+
+      setIsPreviewPlaying(true)
+
+      // Start playback at the specified time
+      const playDuration = endTime - startTime
+      source.start(0, startTime, playDuration)
+
+      // Stop preview when it ends
+      source.onended = () => {
+        setIsPreviewPlaying(false)
+        previewSourceRef.current = null
+      }
+    } catch (error) {
+      console.error('Error previewing clip:', error)
+      setIsPreviewPlaying(false)
+    }
+  }, [
+    showClipEditor,
+    isPreviewPlaying,
+    state.clips,
+    clipStartTime,
+    clipEndTime,
+    initializeAudioContext,
+  ])
+
+  const handleStopPreview = useCallback(() => {
+    if (previewSourceRef.current) {
+      previewSourceRef.current.stop()
+      previewSourceRef.current = null
+    }
+    setIsPreviewPlaying(false)
+  }, [])
+
+  // Cleanup preview on unmount or when clip editor closes
+  useEffect(() => {
+    if (!showClipEditor && previewSourceRef.current) {
+      handleStopPreview()
+    }
+  }, [showClipEditor, handleStopPreview])
+
   return (
     <div className="container mx-auto p-8 bg-white rounded-lg shadow-lg max-w-2xl">
       <h1 className="text-3xl font-bold text-gray-800 mb-8 text-center">
@@ -866,11 +1117,40 @@ const AudioPlayer = () => {
                       }}
                       disabled={!canOperate}
                       className="text-blue-600 hover:text-blue-700 p-2 rounded
-                        hover:bg-blue-50 disabled:opacity-50 disabled:cursor-not-allowed
-                        transition-colors"
-                      aria-label="Download clip"
+                         hover:bg-blue-50 disabled:opacity-50 disabled:cursor-not-allowed
+                         transition-colors"
+                      aria-label="Download original clip"
+                      title="Download original clip"
                     >
                       <i className="fas fa-download text-lg"></i>
+                    </button>
+                    <button
+                      onClick={e => {
+                        e.stopPropagation()
+                        handleDownloadLoopedClip(clip.id)
+                      }}
+                      disabled={!canOperate || state.repeatCount === 0}
+                      className="text-purple-600 hover:text-purple-700 p-2 rounded
+                         hover:bg-purple-50 disabled:opacity-50 disabled:cursor-not-allowed
+                         transition-colors"
+                      aria-label={`Download looped version (${state.repeatCount}x)`}
+                      title={`Download looped version (${state.repeatCount}x)`}
+                    >
+                      <i className="fas fa-sync text-lg"></i>
+                    </button>
+                    <button
+                      onClick={e => {
+                        e.stopPropagation()
+                        handleOpenClipEditor(clip.id)
+                      }}
+                      disabled={!canOperate}
+                      className="text-green-600 hover:text-green-700 p-2 rounded
+                        hover:bg-green-50 disabled:opacity-50 disabled:cursor-not-allowed
+                        transition-colors"
+                      aria-label="Clip audio"
+                      title="Create clip from portion of this audio"
+                    >
+                      <i className="fas fa-cut text-lg"></i>
                     </button>
                     <button
                       onClick={e => {
@@ -882,6 +1162,7 @@ const AudioPlayer = () => {
                          hover:bg-red-50 disabled:opacity-50 disabled:cursor-not-allowed
                          transition-colors"
                       aria-label="Delete clip"
+                      title="Delete clip"
                     >
                       <i className="fas fa-trash text-lg"></i>
                     </button>
@@ -892,6 +1173,164 @@ const AudioPlayer = () => {
           </div>
         )}
       </div>
+
+      {/* Clip Editor */}
+      {showClipEditor && (
+        <div className="mb-8 p-6 bg-gradient-to-r from-green-50 to-blue-50 rounded-lg border-2 border-green-200">
+          <div className="flex justify-between items-center mb-4">
+            <h3 className="text-xl font-bold text-green-800">
+              <i className="fas fa-cut mr-2"></i>
+              Create Audio Clip
+            </h3>
+            <button
+              onClick={() => setShowClipEditor(null)}
+              className="text-gray-500 hover:text-gray-700 p-1 rounded"
+            >
+              <i className="fas fa-times text-lg"></i>
+            </button>
+          </div>
+
+          <div className="mb-4">
+            <p className="text-gray-700 mb-2">
+              Select the portion of "
+              {state.clips.find(c => c.id === showClipEditor)?.name}" to
+              extract:
+            </p>
+            <p className="text-sm text-gray-600">
+              Total duration:{' '}
+              {formatTime(
+                state.clips.find(c => c.id === showClipEditor)?.duration || 0,
+              )}
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Start Time (seconds)
+              </label>
+              <input
+                type="number"
+                min="0"
+                step="0.1"
+                max={
+                  state.clips.find(c => c.id === showClipEditor)?.duration || 0
+                }
+                value={clipStartTime}
+                onChange={e => setClipStartTime(e.target.value)}
+                className="w-full border rounded px-3 py-2 focus:outline-none focus:ring-2
+                  focus:ring-green-500 focus:border-transparent"
+                placeholder="0.0"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                End Time (seconds)
+              </label>
+              <input
+                type="number"
+                min="0"
+                step="0.1"
+                max={
+                  state.clips.find(c => c.id === showClipEditor)?.duration || 0
+                }
+                value={clipEndTime}
+                onChange={e => setClipEndTime(e.target.value)}
+                className="w-full border rounded px-3 py-2 focus:outline-none focus:ring-2
+                  focus:ring-green-500 focus:border-transparent"
+                placeholder="10.0"
+              />
+            </div>
+          </div>
+
+          <div className="mb-4 p-3 bg-blue-50 rounded border border-blue-200">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm text-blue-700">
+                  <i className="fas fa-info-circle mr-1"></i>
+                  Clip Preview: {formatTime(
+                    parseFloat(clipStartTime) || 0,
+                  )} to {formatTime(parseFloat(clipEndTime) || 0)}
+                  <span className="ml-2 font-medium">
+                    Duration:{' '}
+                    {formatTime(
+                      Math.max(
+                        0,
+                        (parseFloat(clipEndTime) || 0) -
+                          (parseFloat(clipStartTime) || 0),
+                      ),
+                    )}
+                  </span>
+                </p>
+              </div>
+              <button
+                onClick={
+                  isPreviewPlaying ? handleStopPreview : handlePreviewClip
+                }
+                disabled={
+                  !clipStartTime ||
+                  !clipEndTime ||
+                  parseFloat(clipStartTime) >= parseFloat(clipEndTime) ||
+                  state.isLoading
+                }
+                className={`px-4 py-2 rounded font-medium transition-colors
+                  ${
+                    isPreviewPlaying
+                      ? 'bg-red-600 hover:bg-red-700 text-white'
+                      : 'bg-blue-600 hover:bg-blue-700 text-white'
+                  } disabled:opacity-50 disabled:cursor-not-allowed`}
+              >
+                {isPreviewPlaying ? (
+                  <>
+                    <i className="fas fa-stop mr-2"></i>
+                    Stop Preview
+                  </>
+                ) : (
+                  <>
+                    <i className="fas fa-play mr-2"></i>
+                    Preview
+                  </>
+                )}
+              </button>
+            </div>
+          </div>
+
+          <div className="flex gap-3">
+            <button
+              onClick={handleCreateClip}
+              disabled={
+                !clipStartTime ||
+                !clipEndTime ||
+                parseFloat(clipStartTime) >= parseFloat(clipEndTime) ||
+                state.isLoading
+              }
+              className="flex-1 bg-green-600 text-white px-6 py-3 rounded font-medium
+                hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500
+                disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+            >
+              {state.isLoading ? (
+                <>
+                  <i className="fas fa-spinner fa-spin mr-2"></i>
+                  Creating Clip...
+                </>
+              ) : (
+                <>
+                  <i className="fas fa-cut mr-2"></i>
+                  Create Clip
+                </>
+              )}
+            </button>
+            <button
+              onClick={() => setShowClipEditor(null)}
+              className="px-6 py-3 border border-gray-300 rounded font-medium
+                hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-gray-500
+                transition-colors"
+            >
+              Cancel
+            </button>
+          </div>
+        </div>
+      )}
 
       {/* Status Dashboard */}
       <div className="grid grid-cols-2 gap-4 text-center p-4 bg-gray-50 rounded">
